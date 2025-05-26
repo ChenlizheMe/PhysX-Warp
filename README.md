@@ -17,6 +17,8 @@ mkdir build
 cd build
 cmake ..
 make
+./main
+# or compute-sanitizer ./main for more information
 ```
 
 You can use `CuCtxCreate` or `CuDevicePrimaryCtxRetain` to create a cuContext, in DFCudaMgr.cpp:71:
