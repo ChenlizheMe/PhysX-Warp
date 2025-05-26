@@ -5,24 +5,31 @@
 // ----------------------------------------------------------------------------
 
 #include "DFComputeCore.h"
-
+#include "cuda_compute/DFCudaMgr.hpp"
+#include <dlfcn.h>
 namespace dexsim {
 namespace compute {
 DFComputeCore::DFComputeCore(bool useCuda) {
-    std::cout<<"compute core constructor"<<std::endl;
     if (useCuda) { CudaInit(); }
 }
 
 void DFComputeCore::CudaInit() {
-    std::cout<<"get cuda init"<<std::endl;
-#ifdef _WIN32
-    HMODULE warp_lib = (HMODULE)LoadLibraryA("cuda_compute.dll");
-#else
-    void* warp_lib = dlopen("libcuda_compute.so", RTLD_NOW | RTLD_GLOBAL);
-#endif
-
-    LOAD_WARP_FUNCTION(cudaInit, "");
-    cudaInit(&cu_mgr_);
+    cu_mgr_ = new cudamgr::CudaManager();
 }
+
+int DFComputeCore::CreateStream(int stream_type) {
+    int stream_id = cu_mgr_->CreateStreamInFamily(stream_type);
+    if (stream_id == -1) {
+        std::cerr << "Failed to create stream in family " << stream_type
+                  << std::endl;
+    }
+    return stream_id;
+}
+
+void DFComputeCore::DeleteStream(int stream_type, int stream_id) {
+    cu_mgr_->DeleteStreamFromFamily(stream_type, stream_id);
+}
+
+void* DFComputeCore::GetCudaContext() { return cu_mgr_->GetCudaContext(); }
 }  // namespace compute
 }  // namespace dexsim

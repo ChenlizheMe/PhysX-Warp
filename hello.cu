@@ -1,0 +1,1 @@
+extern "C" __global__ void hello(int* out) { out[0] = 42; }

@@ -51,7 +51,6 @@ private:
     CUDA_API_FUNC(cuCtxCreate,
                   (CUcontext * pctx, unsigned int flags, CUdevice dev),
                   (pctx, flags, dev))
-    CUDA_API_FUNC(cuCtxDestroy, (CUcontext ctx), (ctx))
     CUDA_API_FUNC(cuCtxGetCurrent, (CUcontext * pctx), (pctx))
     CUDA_API_FUNC(cuCtxSynchronize, (), ())
 
@@ -73,6 +72,13 @@ private:
     CUDA_API_FUNC(cuModuleLoadData,
                   (CUmodule * module, const void* image),
                   (module, image))
+    CUDA_API_FUNC(cuModuleLoadDataEx,
+                  (CUmodule * module,
+                   const void* image,
+                   unsigned int numOptions,
+                   CUjit_option* options,
+                   void** optionValues),
+                  (module, image, numOptions, options, optionValues))
     CUDA_API_FUNC(cuModuleGetFunction,
                   (CUfunction * hfunc, CUmodule hmod, const char* name),
                   (hfunc, hmod, name))

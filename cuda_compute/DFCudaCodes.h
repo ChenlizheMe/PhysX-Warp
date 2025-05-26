@@ -10,17 +10,6 @@
 #include <vector>
 #include <string>
 
-using CUGraphicsResource_t = struct cudaGraphicsResource*;
-using CUstream = struct CUstream_st*;
-using CUdaArray_t = struct cudaArray_st*;
-using CUcontext = struct CUctx_st*;
-
-using CUmodule = struct CUmod_st*;
-using CUfunction = struct CUfunc_st*;
-using CUdevice_v1 = int;
-using CUevent = struct CUevent_st*;
-using CUdevice = CUdevice_v1;
-
 namespace dexsim {
 namespace cudamgr {
 #if defined(_WIN64) || defined(__LP64__)
@@ -44,10 +33,34 @@ enum CUDA_CODES {
     CUDA_ERROR_INVALID_DEVICE = 101,
     CU_GET_PROC_ADDRESS_DEFAULT = 0,
     CU_ENABLE_DEFAULT = 0,
-    CU_CTX_LMEM_RESIZE_TO_MAX = 0x04,
-    CU_CTX_SCHED_BLOCKING_SYNC = 0x08,
-    CU_CTX_MAP_HOST = 0x10
 };
+enum CUjit_option {
+    CU_JIT_MAX_REGISTERS,
+    CU_JIT_THREADS_PER_BLOCK,
+    CU_JIT_WALL_TIME,
+    CU_JIT_INFO_LOG_BUFFER,
+    CU_JIT_ERROR_LOG_BUFFER,
+    CU_JIT_OPTIMIZATION_LEVEL,
+    CU_JIT_TARGET_FROM_CUCONTEXT,
+    CU_JIT_TARGET,
+    CU_JIT_FALLBACK_STRATEGY,
+    CU_JIT_GENERATE_DEBUG_INFO,
+    CU_JIT_LOG_VERBOSE,
+    CU_JIT_GENERATE_LINE_INFO,
+    CU_JIT_CACHE_MODE
+};
+
+// CUDA types
+using CUGraphicsResource_t = struct cudaGraphicsResource*;
+using CUstream = struct CUstream_st*;
+using CUdaArray_t = struct cudaArray_st*;
+using CUcontext = struct CUctx_st*;
+
+using CUmodule = struct CUmod_st*;
+using CUfunction = struct CUfunc_st*;
+using CUdevice_v1 = int;
+using CUevent = struct CUevent_st*;
+using CUdevice = CUdevice_v1;
 
 class ICudaFunctionManager {
 public:
@@ -71,7 +84,6 @@ public:
     ICUDA_API(cuCtxCreate,
               (CUcontext * pctx, unsigned int flags, CUdevice dev),
               (pctx, flags, dev))
-    ICUDA_API(cuCtxDestroy, (CUcontext ctx), (ctx))
     ICUDA_API(cuCtxGetCurrent, (CUcontext * pctx), (pctx))
     ICUDA_API(cuCtxSynchronize, (), ())
 
@@ -91,6 +103,10 @@ public:
     ICUDA_API(cuModuleLoadData,
               (CUmodule * module, const void* image),
               (module, image))
+    ICUDA_API(cuModuleLoadDataEx,
+              (CUmodule * module, const void* image, unsigned int numOptions,
+               CUjit_option* options, void** optionValues),
+              (module, image, numOptions, options, optionValues))
     ICUDA_API(cuModuleGetFunction,
               (CUfunction * hfunc, CUmodule hmod, const char* name),
               (hfunc, hmod, name))

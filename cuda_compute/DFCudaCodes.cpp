@@ -54,7 +54,6 @@ CudaFunctionManager::CudaFunctionManager() {
     LOAD_CUDA_FUNCTION(cuCtxSynchronize, "");
     LOAD_CUDA_FUNCTION(cuCtxSetCurrent, "");
     LOAD_CUDA_FUNCTION(cuDevicePrimaryCtxRetain, "");
-    LOAD_CUDA_FUNCTION(cuCtxDestroy, "");
 
     // Memory Management
     LOAD_CUDA_FUNCTION(cuMemAlloc, "");
@@ -64,6 +63,7 @@ CudaFunctionManager::CudaFunctionManager() {
 
     // Module and Kernel Execution
     LOAD_CUDA_FUNCTION(cuModuleLoadData, "");
+    LOAD_CUDA_FUNCTION(cuModuleLoadDataEx, "");
     LOAD_CUDA_FUNCTION(cuModuleGetFunction, "");
     LOAD_CUDA_FUNCTION(cuLaunchKernel, "");
 
